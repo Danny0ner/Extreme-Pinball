@@ -1,0 +1,150 @@
+#pragma once
+#include "Module.h"
+#include "p2List.h"
+#include "p2Point.h"
+#include "Globals.h"
+
+class PhysBody;
+
+class ModuleSceneIntro : public Module
+{
+public:
+	ModuleSceneIntro(Application* app, bool start_enabled = true);
+	~ModuleSceneIntro();
+
+	bool Start();
+	update_status Update();
+	bool CleanUp();
+	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
+
+public:
+	p2List<PhysBody*> circles;
+	p2List<PhysBody*> boxes;
+	p2List<PhysBody*> ricks;
+	p2List<PhysBody*> Pinballl;
+	bool bouncer1 = false;
+	bool bouncer2 = false;
+	bool bouncer3 = false;
+	bool squares1 = false;
+	bool squares2 = false;
+	uint bouncer1timer;
+	uint bouncer2timer;
+	uint bouncer3timer;
+	uint squares1timer;
+	uint squares2timer;
+	PhysBody* sensor;
+	bool sensed;
+	bool presed = false;
+	SDL_Texture* circle;
+	SDL_Texture* box;
+	SDL_Texture* rick;
+	SDL_Texture* pinballl;
+	SDL_Texture* Redlight;
+	SDL_Texture* boings;
+	SDL_Texture* BouncerL;
+	SDL_Texture* BouncerR;
+	SDL_Texture* BouncerLA;
+	SDL_Texture* BouncerRA;
+	SDL_Texture* N10;
+	SDL_Texture* N25;
+	SDL_Texture* N50;
+	SDL_Texture* A;
+	SDL_Texture* I;
+	SDL_Texture* R;
+	SDL_Texture* cono1;
+	SDL_Texture* cono2;
+	SDL_Texture* cono3;
+	SDL_Texture* cono4;
+	SDL_Texture* cono1tir;
+	SDL_Texture* cono2tir;
+	SDL_Texture* cono3tir;
+	SDL_Texture* cono4tir;
+	SDL_Texture* Box;
+	SDL_Texture* Greenlight1T;
+	SDL_Texture* Greenlight2T;
+	SDL_Texture* Greenlight3T;
+	SDL_Texture* Greenlight4T;
+	SDL_Texture* Negroarribaiz;
+	SDL_Texture* negroarribader;
+	SDL_Texture* negroabajoiz;
+	SDL_Texture* negroabajoder;
+	SDL_Texture* setasalidaarribaiz;
+	SDL_Texture* setasalidaabajoiz;
+	SDL_Texture* setasalidader;
+	SDL_Texture* G;
+	SDL_Texture* GR;
+	SDL_Texture* GI;
+	SDL_Texture* N;
+	SDL_Texture* D;
+	SDL_Texture* X2;
+	SDL_Texture* X2ball;
+	SDL_Texture* Spritesheet;
+	bool setaabajoder = false;
+	bool setaarribaiz = false;
+	bool setaabajoiz = false;
+	bool setaarribader = false;
+	bool setaabajoderA = false;
+	bool setaarribaizA = false;
+	bool setaabajoizA = false;
+	bool setaarribaderA = false;
+	uint setaabajodertime = 0;
+	uint setaarribaiztime = 0;
+	uint setaabajoiztime = 0;
+	uint setaarribadertime = 0;
+	
+	bool cone1down = false;
+	bool cone2down = false;
+	bool cone3down = false;
+	bool cone4down = false;
+	bool electrifed = false;
+	uint electrify;
+	bool bouncerl = false;
+	bool bouncerr = false;
+	uint Grind = 0;
+	uint bouncerrtimer;
+	uint bouncerltimer;
+	uint bonus_fx;
+	uint clock;
+	uint airsound;
+	uint greensound;
+	uint grinding;
+	bool greenlight1 = false;
+	bool greenlight2 = false;
+	bool greenlight3 = false;
+	bool greenlight4 = false;
+	uint greenlight1timer;
+	uint greenlight2timer;
+	uint greenlight3timer;
+	uint greenlight4timer;
+	bool rightSavior = false;
+	bool leftSavior = false;
+	p2Point<int> ray;
+	bool ray_on;
+	bool start = false;
+	uint prepoints = 0;
+	uint preprepoints = 0;
+	uint points = 0;
+	uint points10 = 0;
+	uint pointstime10 = 0;
+	uint pointstime25 = 0;
+	uint pointstime50 = 0;
+	bool tunnel = false;
+	bool avaibletunnel = true;
+	uint tunneltime = 0;
+	uint AIR = 0;
+	uint Startsound;
+	int balls = 5;
+	bool box1down = false;
+	bool box2down = false;
+	bool box3down = false;
+	uint boxdestroy;
+	bool x2 = false;
+	uint timerredlights = 0;
+	uint timerredlights2 = 0;
+	uint dude;
+	bool duude = false;
+	uint dudetimer = 0;
+	uint lastpoints = 0;
+	char title[50];
+	void CreatePinball();
+};
