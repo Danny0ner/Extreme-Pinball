@@ -94,13 +94,13 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	sprintf_s(title, "Extreme Pinball Score: %06d Balls left &d", points, lastpoints, balls);
+	sprintf_s(title, "Extreme Pinball Score: %06d Balls left %d", points, balls);
 	App->window->SetTitle(title);
 
 	App->renderer->Blit(pinballl, 2, 0, NULL, 1.0f);
 	if (start == false) {
 		lastpoints = points;
-		points = 0;
+
 		App->audio->PlayFx(Startsound);
 		circles.add(App->physics->CreateCircle(450, 665, 8, true));
 		circles.getLast()->data->listener = this;
