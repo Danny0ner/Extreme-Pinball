@@ -150,6 +150,9 @@ public:
 	uint lastpoints = 0;
 	uint HighScore = 0;
 	uint Springssound;
+	uint Punch;
+	uint Leftboun;
+	uint Rightboun;
 	char title[90];
 	void CreatePinball();
 };

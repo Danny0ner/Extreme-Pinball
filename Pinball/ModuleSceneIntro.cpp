@@ -83,6 +83,9 @@ bool ModuleSceneIntro::Start()
 	Song = App->audio->LoadFx("pinball/Song.wav");
 	damn = App->audio->LoadFx("pinball/Damn.wav");
 	Springssound = App->audio->LoadFx("pinball/Boing.wav");
+	Punch = App->audio->LoadFx("pinball/Golpe.wav");
+	Leftboun = App->audio->LoadFx("pinball/Bumpers.wav");
+	Rightboun = App->audio->LoadFx("pinball/Bumpers_2.wav");
 	App->audio->PlayFx(Song, -1);
 	return ret;
 }
@@ -616,6 +619,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
+		App->audio->PlayFx(Leftboun);
 		bouncerl = true;
 		if (x2 == false)
 			points += 10;
@@ -623,6 +627,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
+		App->audio->PlayFx(Rightboun);
 		bouncerr = true;
 		if(x2 == false)
 		points += 10;
@@ -707,6 +712,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == iterator->data) {
 		if (cone1down == false) {
 			App->physics->HorizontalRebound(bodyA);
+			App->audio->PlayFx(Punch);
 			cone1down = true;
 		}
 	}
@@ -714,6 +720,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == iterator->data) {
 		
 		if (cone1down == false) {
+			App->audio->PlayFx(Punch);
 			App->physics->VerticalRebound(bodyA);
 			cone1down = true;
 		}
@@ -721,7 +728,9 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
 		if (cone2down == false) {
+			App->audio->PlayFx(Punch);
 			App->physics->HorizontalRebound(bodyA);
+			
 			cone2down = true;
 		}
 	}
@@ -729,6 +738,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == iterator->data) {
 		
 		if (cone2down == false) {
+			App->audio->PlayFx(Punch);
 			App->physics->VerticalRebound(bodyA);
 			cone2down = true;
 		}
@@ -736,6 +746,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
 		if (cone3down == false) {
+			App->audio->PlayFx(Punch);
 			App->physics->HorizontalRebound(bodyA);
 			cone3down = true;
 		}
@@ -743,6 +754,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
 		if (cone3down == false) {
+			App->audio->PlayFx(Punch);
 			App->physics->VerticalRebound(bodyA);
 			cone3down = true;
 		}
@@ -750,6 +762,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
 		if (cone4down == false) {
+			App->audio->PlayFx(Punch);
 			App->physics->HorizontalRebound(bodyA);
 			cone4down = true;
 		}
@@ -757,6 +770,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
 		if (cone4down == false) {
+			App->audio->PlayFx(Punch);
 			App->physics->VerticalRebound(bodyA);
 			cone4down = true;
 		}
