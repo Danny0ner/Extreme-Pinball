@@ -80,6 +80,10 @@ bool ModuleSceneIntro::Start()
 	X2ball = App->textures->Load("pinball/bola azul.png");
 	dude = App->audio->LoadFx("pinball/dude.wav");
 	Spritesheet = App->textures->Load("pinball/Spritesheet.png");
+	Song = App->audio->LoadFx("pinball/Song.wav");
+	damn = App->audio->LoadFx("pinball/Damn.wav");
+	Springssound = App->audio->LoadFx("pinball/Boing.wav");
+	App->audio->PlayFx(Song, -1);
 	return ret;
 }
 
@@ -94,19 +98,22 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	sprintf_s(title, "Extreme Pinball Score: %06d Balls left %d", points, balls);
+	
+	sprintf_s(title, "Score: %03d High Score: %03d Balls Left %d", points, HighScore, balls);
 	App->window->SetTitle(title);
-
-	App->renderer->Blit(pinballl, 2, 0, NULL, 1.0f);
+	App->renderer->Blit(pinballl, 4, 0, NULL, 1.0f);
+	
+	//Start
 	if (start == false) {
 		lastpoints = points;
-
+		points = 0;
 		App->audio->PlayFx(Startsound);
 		circles.add(App->physics->CreateCircle(450, 665, 8, true));
 		circles.getLast()->data->listener = this;
 		start = true;
 		balls--;
 		AIR = 0;
+		Grind = 0;
 		cone1down = false;
 		cone2down = false;
 		cone3down = false;
@@ -119,43 +126,68 @@ update_status ModuleSceneIntro::Update()
 		x2 = false;
 		electrifed = false;
 	}
+	// 
+	// Electrified status
 	if (cone1down == true && cone2down == true && cone3down == true && cone4down == true && electrifed == false) {
 		App->audio->PlayFx(electrify);
 		x2 = true;
 		electrifed = true;
 	}
-	if (points - prepoints == 25 ) {
+	//
+	//Puntuation lights
+	if (points - prepoints == 25 && x2 == false ) {
 		pointstime25 = SDL_GetTicks();
 	}
 	if (SDL_GetTicks() <= pointstime25 + 300) {
-		App->renderer->Blit(N25, 323, 602, NULL, 1.0f);
-		App->renderer->Blit(N25, 123, 602, NULL, 1.0f);
+		App->renderer->Blit(N25, 321, 600, NULL, 1.0f);
+		App->renderer->Blit(N25, 121, 600, NULL, 1.0f);
 	}
-	if (points - prepoints == 50) {
+	if (points - prepoints == 50 && x2 == false) {
 		pointstime50 = SDL_GetTicks();
 	}
 	if (SDL_GetTicks() <= pointstime50 + 300) {
-		App->renderer->Blit(N50, 89, 573, NULL, 1.0f);
-		App->renderer->Blit(N50, 355, 573, NULL, 1.0f);
+		App->renderer->Blit(N50, 87, 572, NULL, 1.0f);
+		App->renderer->Blit(N50, 353, 572, NULL, 1.0f);
 	}
-	if (points-prepoints == 10) {
+	if (points-prepoints == 10 && x2 == false) {
 		pointstime10 = SDL_GetTicks();
 	}
 	
 	if (SDL_GetTicks() <= pointstime10) {
-		App->renderer->Blit(N10, 165, 638, NULL, 1.0f);
+		App->renderer->Blit(N10, 162, 634, NULL, 1.0f);
 		
-		if (points-points10 >= 20) App->renderer->Blit(N10, 286, 638, NULL, 1.0f);
+		if (points-points10 >= 20 && x2 == false) App->renderer->Blit(N10, 283, 634, NULL, 1.0f);
+	}
+
+	if (points - prepoints == 50 && x2 == true) {
+		pointstime25 = SDL_GetTicks();
+	}
+	
+	if (points - prepoints == 100 && x2 == true) {
+		pointstime50 = SDL_GetTicks();
+	}
+	
+	if (points - prepoints == 20 && x2 == true) {
+		pointstime10 = SDL_GetTicks();
+	}
+
+	if (SDL_GetTicks() <= pointstime10 && x2 == true) {
+		App->renderer->Blit(N10, 162, 634, NULL, 1.0f);
+
+	if (points - points10 >= 40 && x2 == true) 
+			App->renderer->Blit(N10, 283, 634, NULL, 1.0f);
 	}
 	if (SDL_GetTicks() > pointstime10) points10 = points;
 	prepoints = points;
+
+	//
+	// Green Lights
 	if (greenlight1 == true) {
 		greenlight1timer = SDL_GetTicks();
 		greenlight1 = false;
 	}
 	if (SDL_GetTicks() <= greenlight1timer + 100) {
 		App->renderer->Blit(Greenlight1T, 149, 91, NULL, 1.0f);
-		
 	}
 	if (greenlight2 == true) {
 		greenlight2timer = SDL_GetTicks();
@@ -163,7 +195,6 @@ update_status ModuleSceneIntro::Update()
 	}
 	if (SDL_GetTicks() <= greenlight2timer + 100) {
 		App->renderer->Blit(Greenlight2T, 169, 67, NULL, 1.0f);
-		
 	}
 	if (greenlight3 == true) {
 		greenlight3timer = SDL_GetTicks();
@@ -172,7 +203,6 @@ update_status ModuleSceneIntro::Update()
 
 	if (SDL_GetTicks() <= greenlight3timer + 100) {
 		App->renderer->Blit(Greenlight3T, 197, 52, NULL, 1.0f);
-		
 	}
 	if (greenlight4 == true) {
 		greenlight4timer = SDL_GetTicks();
@@ -181,7 +211,8 @@ update_status ModuleSceneIntro::Update()
 	if (SDL_GetTicks() <= greenlight4timer + 100) {
 		App->renderer->Blit(Greenlight4T, 233, 37, NULL, 1.0f);
 	}
-
+	//
+	// bouncers on the top of the flipers
 	if (bouncerr == false)
 		App->renderer->Blit(BouncerR, 320, 635, NULL, 1.0f);
 	if (bouncerr == true)
@@ -200,8 +231,8 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(BouncerLA, 115, 635, NULL, 1.0f);
 		bouncerl = false;
 	}
-
-	
+	//
+	// RedLights
 	if (squares1 == true) {
 		squares1timer = SDL_GetTicks();
 		squares1 = false;
@@ -223,6 +254,8 @@ update_status ModuleSceneIntro::Update()
 		if (SDL_GetTicks() > timerredlights2 +200) points += 25;
 		timerredlights2 = SDL_GetTicks();
 	}
+	//
+	// Center Bouncers
 	if (bouncer1 == true) {
 		bouncer1timer = SDL_GetTicks();
 		bouncer1 = false;
@@ -247,60 +280,84 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(boings, 308, 275, NULL, 1.0f);
 		pointstime10 += 50;
 	}
-
-	if (tunnel == true)
+	// 
+	//tunnel
+	/*if (tunnel == true)
 	{
 		tunneltime = SDL_GetTicks();
 		tunnel = false;
 	}
 	if (SDL_GetTicks() >= tunnel + 1000) avaibletunnel = true;
+
+*/
+	//Grind
 	if( Grind == 1){
-		App->renderer->Blit(G, 303, 90, NULL, 1.0f);
+		App->renderer->Blit(G, 305, 91, NULL, 1.0f);
 	
 	}
 	if (Grind == 2) {
-		App->renderer->Blit(G, 303, 90, NULL, 1.0f);
-		App->renderer->Blit(GR, 315, 109, NULL, 1.0f);
+		App->renderer->Blit(G, 305, 91, NULL, 1.0f);
+		App->renderer->Blit(GR, 317, 110, NULL, 1.0f);
 		
 	}
 	if (Grind == 3) {
-		App->renderer->Blit(G, 303, 90, NULL, 1.0f);
-		App->renderer->Blit(GR, 315, 109, NULL, 1.0f);
-		App->renderer->Blit(GI, 333, 128, NULL, 1.0f);
+		App->renderer->Blit(G, 305, 91, NULL, 1.0f);
+		App->renderer->Blit(GR, 317, 110, NULL, 1.0f);
+		App->renderer->Blit(GI, 335, 129, NULL, 1.0f);
 		
 	}
 	if (Grind == 4) {
-		App->renderer->Blit(G, 303, 90, NULL, 1.0f);
-		App->renderer->Blit(GR, 315, 109, NULL, 1.0f);
-		App->renderer->Blit(GI, 333, 128, NULL, 1.0f);
-		App->renderer->Blit(N, 335, 145, NULL, 1.0f);
+		App->renderer->Blit(G, 305, 91, NULL, 1.0f);
+		App->renderer->Blit(GR, 317, 110, NULL, 1.0f);
+		App->renderer->Blit(GI, 335, 129, NULL, 1.0f);
+		App->renderer->Blit(N, 337, 146, NULL, 1.0f);
 		
 	}
 	if (Grind == 5) {
-		App->renderer->Blit(G, 303, 90, NULL, 1.0f);
-		App->renderer->Blit(GR, 315, 109, NULL, 1.0f);
-		App->renderer->Blit(GI, 333, 128, NULL, 1.0f);
-		App->renderer->Blit(N, 335, 145, NULL, 1.0f);
-		App->renderer->Blit(D, 343, 175, NULL, 1.0f);
+		App->renderer->Blit(G, 305, 91, NULL, 1.0f);
+		App->renderer->Blit(GR, 317, 110, NULL, 1.0f);
+		App->renderer->Blit(GI, 335, 129, NULL, 1.0f);
+		App->renderer->Blit(N, 337, 146, NULL, 1.0f);
+		App->renderer->Blit(D, 345, 176, NULL, 1.0f);
 	}
 	if (Grind > 5) {
+		points += 170;
 		Grind = 0;
+		App->audio->PlayFx(damn);
+		ComboBreaker = SDL_GetTicks();
 	}
+	//AIR
 	if (AIR == 1)
 	{
-		App->renderer->Blit(A, 97, 538, NULL, 1.0f);
+		App->renderer->Blit(A, 95, 536, NULL, 1.0f);
 		
 	}
 	if (AIR == 2) {
-		App->renderer->Blit(I, 105, 518, NULL, 1.0f);
-		App->renderer->Blit(A, 97, 538, NULL, 1.0f);
+		App->renderer->Blit(A, 95, 536, NULL, 1.0f);
+		App->renderer->Blit(I, 103, 515, NULL, 1.0f);
+
 	}
 	if (AIR == 3) {
-		App->renderer->Blit(A, 97, 538, NULL, 1.0f);
-		App->renderer->Blit(I, 105, 518, NULL, 1.0f);
-		App->renderer->Blit(R, 118, 499, NULL, 1.0f);
+		App->renderer->Blit(A, 95, 536, NULL, 1.0f);
+		App->renderer->Blit(I, 103, 515, NULL, 1.0f);
+		App->renderer->Blit(R, 116, 495, NULL, 1.0f);
 	}
-	if (AIR > 3) AIR = 0;
+	if (AIR > 3){
+		AIR = 0;
+		points += 170;
+		App->audio->PlayFx(damn);
+		ComboBreaker = SDL_GetTicks();
+	}
+	if (SDL_GetTicks() <= ComboBreaker + 1800) {
+		App->renderer->Blit(N25, 321, 600, NULL, 1.0f);
+		App->renderer->Blit(N25, 121, 600, NULL, 1.0f);
+		App->renderer->Blit(N50, 87, 572, NULL, 1.0f);
+		App->renderer->Blit(N50, 353, 572, NULL, 1.0f);
+		App->renderer->Blit(N10, 162, 634, NULL, 1.0f);
+		App->renderer->Blit(N10, 283, 634, NULL, 1.0f);
+	}
+	//
+	//Cones
 	if (cone1down == false) {
 		App->renderer->Blit(cono1, 400, 322, NULL, 1.0f);
 	}
@@ -336,6 +393,8 @@ update_status ModuleSceneIntro::Update()
 	if (cone4down == true) {
 		App->renderer->Blit(cono4tir, 400, 433, NULL, 1.0f);
 	}
+	//
+	//
 	if (setaarribader == false) {
 		App->renderer->Blit(negroarribader, 400, 277, NULL, 1.0f);
 	}
@@ -372,12 +431,15 @@ update_status ModuleSceneIntro::Update()
 	if (SDL_GetTicks() > setaarribaiztime + 100) {
 		setaarribaiz = false;
 	}
+	//
+	//
 	if (x2 == true) {
 		App->renderer->Blit(X2, 239, 477, NULL, 1.0f);
 	}
 	if (SDL_GetTicks() < dudetimer + 1000) {
 		//App->renderer->Blit(Spritesheet, 239, 477, NULL, 1.0f);
 	}
+	if (points > HighScore) HighScore = points;
 	if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
 		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 8, true));
@@ -388,8 +450,9 @@ update_status ModuleSceneIntro::Update()
 		boxes.add(App->physics->CreateRectangle(App->input->GetMouseX(), App->input->GetMouseY(), 3,3,0, true));
 		boxes.getLast()->data->listener = this;
 	}
-	if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
 		balls = 5;
+		start = false;
 	}
 	if(App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
 	{
@@ -512,17 +575,26 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == iterator->data)
 	{
 		bouncer1 = true;
-		App->audio->PlayFx(bonus_fx); points += 10;
+		App->audio->PlayFx(bonus_fx); 	
+		if (x2 == false)
+			points += 10;
+		if (x2 == true) points += 20;
 	}
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
 		bouncer2 = true;
-		App->audio->PlayFx(bonus_fx); points += 10;
+		App->audio->PlayFx(bonus_fx); 	
+		if (x2 == false)
+			points += 10;
+		if (x2 == true) points += 20;
 	}
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
 		bouncer3 = true;
-		App->audio->PlayFx(bonus_fx); points += 10;
+		App->audio->PlayFx(bonus_fx); 	
+		if (x2 == false)
+			points += 10;
+		if (x2 == true) points += 20;
 	}
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
@@ -535,19 +607,26 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
+		if (Grind <= 4)
 		App->audio->PlayFx(grinding);
 		Grind++;
+		if(x2 == false)
 		points += 50;
+		if (x2 == true) points += 100;
 	}
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
 		bouncerl = true;
-		points += 10;
+		if (x2 == false)
+			points += 10;
+		if (x2 == true) points += 20;
 	}
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
 		bouncerr = true;
+		if(x2 == false)
 		points += 10;
+		if (x2 == true) points += 20;
 	}
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
@@ -597,6 +676,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == iterator->data) {
 		if (rightSavior == false) {
 			bodyA->body->ApplyForceToCenter(b2Vec2(0.0f, -150.0f), true);
+			App->audio->PlayFx(Springssound);
 			rightSavior = true;
 		}
 	}
@@ -604,6 +684,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	if (bodyB == iterator->data) {
 		if (leftSavior == false) {
 			bodyA->body->ApplyForceToCenter(b2Vec2(0.0f, -150.0f), true);
+			App->audio->PlayFx(Springssound);
 			leftSavior = true;
 		}
 	}
@@ -615,9 +696,11 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 	}
 	iterator = iterator->next;
 	if (bodyB == iterator->data) {
-	
+	if(AIR <= 2)
 		App->audio->PlayFx(airsound);
+		if(x2 == false)
 		points += 25;
+		if (x2 == true) points += 50;
 		AIR++;
 	}
 	iterator = iterator->next;

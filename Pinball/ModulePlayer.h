@@ -25,7 +25,10 @@ public:
 	PhysBody* Spring;
 	PhysBody* Pivot_spring;
 	PhysBody* pivottex;
-
+	uint kickerle;
+	uint kickerri;
+	uint springsound;
+	bool springon = false;
 	bool presed = false;
 	uint lever_fx;
 	bool active_left = false;

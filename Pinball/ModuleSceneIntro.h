@@ -79,6 +79,9 @@ public:
 	SDL_Texture* X2;
 	SDL_Texture* X2ball;
 	SDL_Texture* Spritesheet;
+	uint ComboBreaker = 0;
+	uint damn;
+	bool songStarted = false;
 	bool setaabajoder = false;
 	bool setaarribaiz = false;
 	bool setaabajoiz = false;
@@ -91,7 +94,7 @@ public:
 	uint setaarribaiztime = 0;
 	uint setaabajoiztime = 0;
 	uint setaarribadertime = 0;
-	
+	uint Song;
 	bool cone1down = false;
 	bool cone2down = false;
 	bool cone3down = false;
@@ -145,6 +148,8 @@ public:
 	bool duude = false;
 	uint dudetimer = 0;
 	uint lastpoints = 0;
-	char title[50];
+	uint HighScore = 0;
+	uint Springssound;
+	char title[90];
 	void CreatePinball();
 };

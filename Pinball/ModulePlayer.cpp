@@ -24,6 +24,10 @@ bool ModulePlayer::Start()
 	Pivot_spring = App->physics->CreateRectangle(458, 755, 20, 10,0, false);
 	App->physics->CreateDistanceJoint(Spring, Pivot_spring);
 	Spritesheeet = App->textures->Load("pinball/Spritesheet.png");
+	kickerle =App->audio->LoadFx("pinball/kickerleft.wav");
+	springsound = App->audio->LoadFx("pinball/Boing.wav");
+	kickerri = App->audio->LoadFx("pinball/kickerright.wav");
+
 	return true;
 }
 
@@ -38,38 +42,42 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
 	{
 		App->physics->LKickerMove();
+		App->audio->PlayFx(kickerle);
 	}
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_UP)
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_UP || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_UP)
 	{
 		App->physics->LKickerStop();
 
 	}
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
 	{
 		App->physics->RKickerMove();
+		App->audio->PlayFx(kickerri);
+	
 	}
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_UP)
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_UP || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_UP)
 	{
 		App->physics->RKickerStop();
 
 	}
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-	{
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)	{
 		Spring->body->ApplyForceToCenter(b2Vec2(0.0f, 0.000000000000000000000000000000000000001f), true);
+	
 	}
 	else
 	{
 		Spring->body->ApplyForceToCenter(b2Vec2(0.0f, -70.0f), true);
 	}
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_UP) 	App->audio->PlayFx(springsound);
 	SDL_Rect rect;
 	int r, u;
 	Spring->GetPosition(r, u);
 	iPoint springpos((r), (u));
 	rect.x = 517; rect.y = 447; rect.w = 26; rect.h = 59;
-	App->renderer->Blit(Spritesheeet, springpos.x, springpos.y, &rect, 1.0f);
+	App->renderer->Blit(Spritesheeet, springpos.x-2, springpos.y, &rect, 1.0f);
 	
 	rect.x = 345; rect.y = 863; rect.w = 97; rect.h = 87;
 	App->renderer->Blit(Spritesheeet, 440, 760, &rect, 1.0f);
